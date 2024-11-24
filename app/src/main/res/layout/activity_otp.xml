@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/lightorange"
+    tools:context=".login"
+    android:gravity="center"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login Page"
+        android:padding="15dp"
+        android:textSize="20sp"
+        android:textColor="@color/darkgrey"
+        />
+
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/otp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint = "OTP Number"
+        android:inputType="number"
+        android:padding="15dp"
+        android:layout_margin="10dp"
+        android:background="@color/lightgrey"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        />
+
+    <TextView
+        android:id="@+id/resendotp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resend Otp"
+        android:textStyle="bold"
+        android:textColor="@color/lightgrey"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        />
+
+    <Button
+        android:id="@+id/logbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lg"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:textSize="20sp"
+        />
+
+</LinearLayout>

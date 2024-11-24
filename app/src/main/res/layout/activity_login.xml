@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/lightorange"
+    tools:context=".login"
+    android:gravity="center"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login Page"
+        android:padding="15dp"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="@color/darkgrey"
+        />
+
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/phonenumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint = "@string/phnum"
+        android:inputType="number"
+        android:padding="15dp"
+        android:layout_margin="10dp"
+        android:background="@color/lightgrey"
+        android:textColorHint="@color/white"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:maxLines="10"
+        />
+
+    <Button
+        android:id="@+id/verifybtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Verify"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:textSize="20sp"
+        />
+    <Button
+        android:id="@+id/regbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/rg"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:textSize="20sp"
+        />
+
+</LinearLayout>

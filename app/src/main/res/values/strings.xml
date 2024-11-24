@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Login_page</string>
+    <string name="phnum">Phone Number</string>
+    <string name="lg">Login</string>
+    <string name="rg">Register</string>
+    <string name="premium">Premium User</string>
+</resources>
+
