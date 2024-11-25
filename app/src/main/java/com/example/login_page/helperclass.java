@@ -3,10 +3,10 @@ package com.example.login_page;
 public class helperclass {
     private String name;
     private String age;
-    private String phonenumber; // Updated to match "phonenumber" in warning
-    private boolean ispremiem;  // Updated to match "ispremiem" in warning
+    private String phonenumber;
+    private boolean ispremiem;
 
-    // No-argument constructor required for Firebase
+
     public helperclass() {
     }
 
@@ -34,7 +34,7 @@ public class helperclass {
         this.age = age;
     }
 
-    public String getPhonenumber() { // Updated getter
+    public String getPhonenumber() {
         return phonenumber;
     }
 
@@ -46,7 +46,7 @@ public class helperclass {
         return ispremiem;
     }
 
-    public void setIspremiem(boolean ispremiem) { // Updated setter
+    public void setIspremiem(boolean ispremiem) {
         this.ispremiem = ispremiem;
     }
 }
