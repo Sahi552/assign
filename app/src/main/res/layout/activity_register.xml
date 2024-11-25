@@ -21,7 +21,7 @@
 
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/usrname"
+        android:id="@+id/editname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint = "User name"
@@ -34,7 +34,7 @@
         android:textSize="20sp"
         />
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/usrage"
+        android:id="@+id/editage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint = "User Age"
@@ -48,7 +48,7 @@
         android:maxLines="2"
         />
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/phonenumber"
+        android:id="@+id/editphone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint = "@string/phnum"
@@ -61,11 +61,12 @@
         android:textSize="20sp"
         android:maxLines="10"
         />
+
     <CheckBox
-        android:id="@+id/premiumStatus"
+        android:id="@+id/premiemStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/premium"
+        android:text="@string/premiem"
         android:padding="10dp"
         android:textSize="20sp"
         android:textColor="@color/darkgrey"
@@ -73,7 +74,7 @@
 
 
     <Button
-        android:id="@+id/regbtn"
+        android:id="@+id/buttonregister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/rg"

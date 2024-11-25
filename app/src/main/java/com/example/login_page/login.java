@@ -1,5 +1,6 @@
 package com.example.login_page;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +16,7 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -23,18 +24,22 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 
 public class login extends AppCompatActivity {
 
-    //initalize variable
-    private static final String TAG = "PhoneAuthActivity";
-    private FirebaseAuth mAuth;
+    private EditText Usernumber;
+    private Button Userregister,Userverify;
+    private FirebaseAuth firebaseAuth;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
-    private String phoneNumber;
-    private DatabaseReference databaseReference;
+    private static final String TAG = "PhoneAuthActivity";
+    private String receivedotp;
+    private PhoneAuthProvider.ForceResendingToken receivedtoken;
+    private String Mobile;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,136 +47,108 @@ public class login extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        //initialize firebase
-        mAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        //initialize variables
+        initializer();
 
-        Button verifybtn = findViewById(R.id.verifybtn);
-        Button regbtn = findViewById(R.id.regbtn);
-        EditText phnumber = findViewById(R.id.phonenumber);
-
-        // Register Button Listener
-        regbtn.setOnClickListener(v -> {
-            Intent intent = new Intent(this, register.class);
+        //register button clicked
+        Userregister.setOnClickListener(v -> {
+            Intent intent = new Intent(login.this,register.class);
             startActivity(intent);
         });
 
-        // Verify Button Listener
-        verifybtn.setOnClickListener(v -> {
-            phoneNumber = phnumber.getText().toString().trim();
-            if (phoneNumber.isEmpty()) {
-                Toast.makeText(this, "Please enter a phone number.", Toast.LENGTH_SHORT).show();
-            } else if (phoneNumber.length() == 10) {
-                phoneNumber = "+91" + phoneNumber; // Format phone number
-                checkPhoneNumberInDatabase(phoneNumber);
-            } else {
-                Toast.makeText(this, "Please enter a valid 10-digit phone number.", Toast.LENGTH_SHORT).show();
+        //verify button clicked
+        Userverify.setOnClickListener(v -> {
+            //getvalues
+            Mobile = Usernumber.getText().toString().trim();
+
+            if (Mobile.isEmpty()) {
+                Toast.makeText(login.this,"Enter Phone Number",Toast.LENGTH_SHORT).show();
+            }else if (Mobile.length() == 10){
+                String Mobilenumber = "+91" + Mobile;
+                verifyUserDetails(Mobilenumber);
+            }
+        });
+
+    }
+
+    private void verifyUserDetails(String mobilenumber) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        Query checkUserDatabse = reference.orderByChild("phonenumber").equalTo(mobilenumber);
+
+        checkUserDatabse.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Toast.makeText(login.this,"Verified successful",Toast.LENGTH_SHORT).show();
+                    sendotp(mobilenumber);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(login.this,"Verified failed",Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        }
+    private void initializer(){
+        Usernumber = findViewById(R.id.editphone);
+        Userregister = findViewById(R.id.buttonregister);
+        Userverify = findViewById(R.id.buttonverify);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        authcallbacks();
     }
 
-    // Initialize Callbacks
-    private void initializeCallbacks() {
+    private void authcallbacks(){
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
-                // Automatic verification or instant sign-in
-                signInWithPhoneAuthCredential(credential);
+                Log.d(TAG, "onVerificationCompleted:" + credential);
             }
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
+                Log.w(TAG, "onVerificationFailed", e);
+
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    Log.w(TAG, "Invalid phone number.", e);
-                    Toast.makeText(login.this, "Invalid phone number.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(login.this,"Invalid Credential",Toast.LENGTH_SHORT).show();
                 } else if (e instanceof FirebaseTooManyRequestsException) {
-                    Log.w(TAG, "Quota exceeded.", e);
-                    Toast.makeText(login.this, "Too many requests. Try again later.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.w(TAG, "Verification failed.", e);
-                    Toast.makeText(login.this, "Verification failed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(login.this,"Frequent Credential",Toast.LENGTH_SHORT).show();
+                } else if (e instanceof FirebaseAuthMissingActivityForRecaptchaException) {
+                    Toast.makeText(login.this,"login failed",Toast.LENGTH_SHORT).show();
                 }
+
             }
 
+
             @Override
-            public void onCodeSent(@NonNull String verificationId,
-                                   @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                // Pass verificationId and token to the OTP activity
-                Intent intent = new Intent(login.this, otp.class);
-                intent.putExtra("verifyid", verificationId);
-                intent.putExtra("token", token);
-                intent.putExtra("phnum", phoneNumber); // Ensure phoneNumber is a global variable or pass it explicitly
+            public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                Log.d(TAG, "onCodeSent:" + verificationId);
+                receivedotp = verificationId;
+                receivedtoken = token;
+                Intent intent = new Intent(login.this,otp.class);
+                intent.putExtra("phonenumber",Mobile);
+                intent.putExtra("verifyotp",receivedotp);
+                intent.putExtra("verifytoken",receivedtoken);
                 startActivity(intent);
+
             }
         };
+
     }
 
-
-    // Check Phone Number in Database
-    private void checkPhoneNumberInDatabase(String phoneNumber) {
-
-        databaseReference.orderByChild("phoneNumber").equalTo(phoneNumber).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Phone number exists, start OTP verification
-                    startPhoneNumberVerification(phoneNumber);
-                } else {
-                    // Phone number does not exist, redirect to RegisterActivity
-                    Toast.makeText(login.this, "Phone number not registered. Please register first.", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(login.this, register.class);
-                    intent.putExtra("phoneNumber", phoneNumber);
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(login.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    // Phone Number Verification
-    private void startPhoneNumberVerification(String phoneNumber) {
-        if (mCallbacks == null) {  // Ensure callbacks are initialized
-            initializeCallbacks();
-        }
+    private void sendotp(String phoneNumber) {
         PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(phoneNumber)           // Phone number to verify
-                        .setTimeout(60L, TimeUnit.SECONDS)     // Timeout duration
-                        .setActivity(this)                    // Activity (for callback binding)
-                        .setCallbacks(mCallbacks)             // Pass the initialized callbacks
+                PhoneAuthOptions.newBuilder(firebaseAuth)
+                        .setPhoneNumber(phoneNumber)       // Phone number to verify
+                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                        .setActivity(this)                 // (optional) Activity for callback binding
+                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
-
-    // Sign-In with Phone Credential
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(this, "Sign-in successful.", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(this, MainActivity.class));
-                        finish();
-                    } else {
-                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                            Toast.makeText(this, "Invalid verification code.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
 }
+

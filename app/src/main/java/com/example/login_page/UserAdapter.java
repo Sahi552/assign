@@ -8,9 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
+import java.util.List;public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private final List<helperclass> userList;
 
@@ -31,10 +29,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         helperclass user = userList.get(position);
 
-        holder.tvName.setText("Name: " + user.getName());
-        holder.tvAge.setText("Age: " + user.getAge());
-        holder.tvPhone.setText("Phone: " + user.getPhonenumber());
-        holder.tvPremium.setText("Premium: " + (user.isIspremiem() ? "true" : "false"));
+        holder.tvName.setText(String.format("Name: %s" , user.getName()));
+        holder.tvAge.setText(String.format("Age: %s" , user.getAge()));
+        holder.tvPhone.setText(String.format("Phonenumber: %s" , user.getPhonenumber()));
+        holder.tvPremium.setText(String.format("Premiem: %s" , (user.isIspremiem() ? "true" : "false")));
+
+
     }
 
     @Override
@@ -54,3 +54,4 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
     }
 }
+

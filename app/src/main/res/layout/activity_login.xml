@@ -22,7 +22,7 @@
 
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/phonenumber"
+        android:id="@+id/editphone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint = "@string/phnum"
@@ -37,7 +37,7 @@
         />
 
     <Button
-        android:id="@+id/verifybtn"
+        android:id="@+id/buttonverify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Verify"
@@ -46,7 +46,7 @@
         android:textSize="20sp"
         />
     <Button
-        android:id="@+id/regbtn"
+        android:id="@+id/buttonregister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/rg"

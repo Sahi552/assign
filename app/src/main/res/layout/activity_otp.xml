@@ -21,7 +21,7 @@
 
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/otp"
+        android:id="@+id/editotp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint = "OTP Number"
@@ -48,7 +48,7 @@
         />
 
     <Button
-        android:id="@+id/logbtn"
+        android:id="@+id/buttonlogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/lg"
